@@ -1,16 +1,10 @@
 import { Module } from '@nestjs/common';
-
-import { OrderManagmentModule } from './orderManagment/orderManagment.module';
-import { MongooseModule } from '@nestjs/mongoose';
-import { RedisModule } from './common/redis.module';
+import { LogsModule } from './modules/logs/logs.module';
+import { ConfigModule } from './config/config.module';
+import { OrderModule } from './modules/orders/order.module';
+import { CacheCustomModule } from './common/cache/cache.module';
 
 @Module({
-  imports: [
-    RedisModule,
-    OrderManagmentModule,
-    MongooseModule.forRoot(
-      process.env.MONGO_URI || 'mongodb://localhost/zenith',
-    ),
-  ],
+  imports: [CacheCustomModule, LogsModule, OrderModule, ConfigModule],
 })
 export class AppModule {}

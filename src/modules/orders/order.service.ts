@@ -1,14 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Order } from '../models/order.model';
-import OrderDto from '../dtos/order.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CustomLogger } from 'src/common/logger.service';
+import { Order } from './models/order.model';
+import OrderDto from './dtos/order.dto';
 
 @Injectable()
 export class OrderService {
-  private readonly logger = new CustomLogger(OrderService.name);
-
   constructor(
     @InjectModel(Order.name) private readonly orderModel: Model<Order>,
   ) {}

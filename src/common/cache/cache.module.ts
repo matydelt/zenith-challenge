@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/require-await */
 import { Module } from '@nestjs/common';
 import { CacheModule } from '@nestjs/cache-manager';
-import { RedisService } from './redis.service';
+import { CacheService } from './cache.service';
 import { createKeyv } from '@keyv/redis';
 
-const redisModuleFactory = CacheModule.registerAsync({
+const cacheModuleFactory = CacheModule.registerAsync({
   isGlobal: true,
   useFactory: async () => {
     return {
@@ -21,9 +21,9 @@ const redisModuleFactory = CacheModule.registerAsync({
 });
 
 @Module({
-  imports: [redisModuleFactory],
+  imports: [cacheModuleFactory],
   controllers: [],
-  providers: [RedisService],
-  exports: [RedisService],
+  providers: [CacheService],
+  exports: [CacheService, CacheModule],
 })
-export class RedisModule {}
+export class CacheCustomModule {}

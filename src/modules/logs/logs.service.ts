@@ -1,14 +1,13 @@
 import { Client } from '@elastic/elasticsearch';
-import { Injectable } from '@nestjs/common';
-import { CustomLogger } from 'src/common/logger.service';
+import { ConsoleLogger, Injectable } from '@nestjs/common';
 
 @Injectable()
-export class LogService {
-  private readonly logger = new CustomLogger(LogService.name);
+export class LogsService {
+  private logger = new ConsoleLogger(LogsService.name);
   private static client = new Client({
     node: process.env.ELASTICSEARCH_URL || 'http://localhost:9200',
   });
-  private _client = LogService.client;
+  private _client = LogsService.client;
 
   async getOrderLogsById(orderId: string) {
     const result = await this._client.search({
@@ -21,5 +20,18 @@ export class LogService {
       sort: [{ timestamp: { order: 'desc' } }],
     });
     return result.hits.hits.map((hit) => hit._source);
+  }
+
+  async registerOrderLog(message: string, orderId: string, trace?: string) {
+    this.logger.log(message);
+    await this._client.index({
+      index: 'logs',
+      body: {
+        message,
+        orderId,
+        timestamp: new Date().toISOString(),
+        trace,
+      },
+    });
   }
 }
