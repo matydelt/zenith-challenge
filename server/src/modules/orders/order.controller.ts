@@ -14,6 +14,7 @@ import OrderDto from './dtos/order.dto';
 import { OrderService } from './order.service';
 import { MessageBrokerService } from 'src/common/message-broker/messageBroker.service';
 import { LogsService } from '../logs/logs.service';
+import { ObjectIdPipe } from 'src/common/pipes/objectid.pipe';
 
 @Controller('orders')
 export class OrderController {
@@ -46,7 +47,7 @@ export class OrderController {
 
   @UseInterceptors(CacheInterceptor)
   @Get(':orderId')
-  async getOrderById(@Param('orderId') orderId: string): Promise<any> {
+  async getOrderById(@Param('orderId', ObjectIdPipe) orderId: string): Promise<any> {
     try {
       const data = await this.orderService.getOrderById(orderId);
       return this.orderService.buildOrderResponse(data);
